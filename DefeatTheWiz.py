@@ -1,3 +1,5 @@
+import random
+
 # Base character class
 class Character:
     def __init__(self, name, health, attack_power):
@@ -8,8 +10,13 @@ class Character:
         self.healing_potions = 3 # Each character starts with 3 healing potions
 
     def attack(self, opponent):
-        opponent.health -= self.attack_power
-        print(f"{self.name} attacks {opponent.name} for {self.attack_power} damage!")
+        # Calculate random damage within range
+        min_dam = int(self.attack_power * 0.5)
+        max_dam = int(self.attack_power * 1.5)
+        damage = random.randint(min_dam, max_dam)
+
+        opponent.health -= damage
+        print(f"{self.name} attacks {opponent.name} for {damage} damage!")
         if opponent.health <= 0:
             print(f"{opponent.name} has been defeated!")
 
@@ -48,8 +55,12 @@ class Warrior(Character):
 
     def attack(self, opponent):
         """Warrior builds rage with each attack."""
-        opponent.health -= self.attack_power
-        print(f"{self.name} attacks {opponent.name} for {self.attack_power} damage!")
+        # Calculate random damage
+        min_dam = int(self.attack_power * 0.5)
+        max_dam = int(self.attack_power * 1.5)
+        damage = random.randint(min_dam, max_dam)
+        opponent.health -= damage
+        print(f"{self.name} attacks {opponent.name} for {damage} damage!")
 
         # Increase rage stacks
         if self.rage_stacks < self.max_rage:
@@ -137,8 +148,12 @@ class Mage(Character):
 
     def attack(self, opponent):
         """Mage attacks and regenerates mana."""
-        opponent.health -= self.attack_power
-        print(f"{self.name} casts a spell at {opponent.name} for {self.attack_power} damage!")
+        # Calculate random damage
+        min_dam = int(self.attack_power * 0.5)
+        max_dam = int(self.attack_power * 1.5)
+        damage = random.randint(min_dam, max_dam)
+        opponent.health -= damage
+        print(f"{self.name} casts a spell at {opponent.name} for {damage} damage!")
 
         # Regenerate mana
         if self.mana < self.max_mana:
@@ -226,8 +241,12 @@ class Archer(Character):
 
     def attack(self, opponent):
         """Archer attacks and builds focus"""
-        opponent.health -= self.attack_power
-        print(f"{self.name} shoots an arrow at {opponent.name} for {self.attack_power} damage!")
+        # Calculate random damage
+        min_dam = int(self.attack_power * 0.5)
+        max_dam = int(self.attack_power * 1.5)
+        damage = random.randint(min_dam, max_dam)
+        opponent.health -= damage
+        print(f"{self.name} shoots an arrow at {opponent.name} for {damage} damage!")
 
         # Increase focus
         if self.focus < self.max_focus:
@@ -324,8 +343,13 @@ class Paladin(Character):
 
     def attack(self, opponent):
         """Paladin attacks and builds holy power"""
-        opponent.health -= self.attack_power
-        print(f"{self.name} strikes {opponent.name} with holy might for {self.attack_power} damage!")
+        # Calculate random damage
+        min_dam = int(self.attack_power * 0.5)
+        max_dam = int(self.attack_power * 1.5)
+        damage = random.randint(min_dam, max_dam)
+
+        opponent.health -= damage
+        print(f"{self.name} strikes {opponent.name} with holy might for {damage} damage!")
 
         # Increase holy power
         if self.holy_power < self.max_holy_power:
@@ -417,6 +441,7 @@ class EvilWizard(Character):
     def __init__(self, name):
         super().__init__(name, health=150, attack_power=15)
         self.is_stunned = False
+        self.turn_counter = 0 # Track turns for special ability
 
     def regenerate(self):
         # Check if stunned first
@@ -435,8 +460,33 @@ class EvilWizard(Character):
             print(f"{self.name} recovers from the stun!")
             return
 
-        # Normal attack
-        super().attack(opponent)
+        # Increment turn counter
+        self.turn_counter += 1
+        # Check if it's time to use special ability (every 4 turns)
+        if self.turn_counter % 4 == 0:
+            self.dark_bolt(opponent)
+        else:
+            # Regular attack
+            min_dam = int(self.attack_power * 0.5)
+            max_dam = int(self.attack_power * 1.5)
+            damage = random.randint(min_dam, max_dam)
+            opponent.health -= damage
+            print(f"{self.name} attacks {opponent.name} for {damage} damage!")
+            if opponent.health <= 0:
+                print(f"{opponent.name} has been defeated!")
+
+    def dark_bolt(self, opponent):
+        """Special Ability - powerful dark magic attack used every 4 turns"""
+        special_damage = 35
+        spec_dam_max = 60
+        damage = random.randint(special_damage, spec_dam_max)
+        opponent.health -= damage
+        print(f"🌑💥{self.name} unleashes DARK BOLT!")
+        print(f"A surge of dark energy hits {opponent.name} for {damage} damage!")
+        print(f"👹The dark magic courses through {opponent.name}")
+
+        if opponent.health <= 0:
+            print(f"{opponent.name} has been defeated!")
 
 def create_character():
     print("Choose your character class:")
